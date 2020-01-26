@@ -8,7 +8,7 @@
 static const int DHT_SENSOR_PIN = 2;
 DHT_nonblocking dht_sensor( DHT_SENSOR_PIN, DHT_SENSOR_TYPE );
 int yled = 3;            //the pin of the yellow LED
-bool yled_status = LOW;  //the yellow led status
+bool yled_status = HIGH;  //the yellow led status
 
 AltSoftSerial BTserial;  // RX = 8, TX = 9
 char inDataBT = ' ';  
@@ -38,18 +38,20 @@ void setup( )
 static bool measure_environment( float *temperature, float *humidity )
 {
   static unsigned long measurement_timestamp = millis( );
+  static bool first_call = 1;
 
-  /* Measure once every four seconds. */
-  if( millis( ) - measurement_timestamp > 3000ul )
+  /* Measure once every five seconds. */
+  if(first_call || (millis() - measurement_timestamp > 5000ul))
   {
     if( dht_sensor.measure( temperature, humidity ) == true )
     {
-      measurement_timestamp = millis( );
-      return( true );
+      first_call = 0;
+      measurement_timestamp = millis();
+      return(true);
     }
   }
 
-  return( false );
+  return(false);
 }
 
 /*
@@ -63,16 +65,21 @@ void loop( )
 
   /* Measure temperature and humidity.  If the functions returns
      true, then a measurement is available. */
-  /*if( measure_environment( &temperature, &humidity ) == true )
+  if(measure_environment(&temperature, &humidity) == true)
   {
     digitalWrite(yled, yled_status);
     yled_status = (yled_status == LOW) ? HIGH : LOW;
-    Serial.print( "T = " );
-    Serial.print( temperature, 1 );
-    Serial.print( " deg. C, H = " );
-    Serial.print( humidity, 1 );
-    Serial.println( "%" );
-  }*/
+    Serial.print("T = ");
+    Serial.print(temperature, 1);
+    Serial.print("deg. C, H = ");
+    Serial.print(humidity, 1);
+    Serial.println("%");
+    BTserial.print("T = ");
+    BTserial.print(temperature, 1);
+    BTserial.print("C, H = ");
+    BTserial.print(humidity, 1);
+    BTserial.print("%");
+  }
 
   //BLE code
   // Read from the Bluetooth module and send to the Arduino Serial Monitor
