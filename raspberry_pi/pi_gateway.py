@@ -3,6 +3,7 @@ import time
 import binascii
 import threading
 import sys
+import os
 
 # class used for handlng incoming notifications from the Arduino
 class ReceiveDelegate(btle.DefaultDelegate):
@@ -11,20 +12,25 @@ class ReceiveDelegate(btle.DefaultDelegate):
 
   def handleNotification(self, cHandle, data):
     print("")
-    print("ARDUINO: " + data.decode("utf-8"))
+    #print("ARDUINO: " + data.decode("utf-8"))
 
 # Thread function
 threadStop = 0
 def waitForNotifications():
   while True:
     try:
-      if dev.waitForNotifications(1):
+      if dev.waitForNotifications(1.0):
         pass
       if threadStop == 1:
         return
+    except btle.BTLEException as e:
+      if str(e) == "Unexpected response (wr)":  # https://www.github.com/IanHarvey/bluepy/issues/253
+        print "CAUGHT!"
+        #dev.disconnect()
+        #print "Disconnected!"
+        os._exit(0)
     except btle.BTLEDisconnectError:
-      return
-      
+      return  
 
 # SETUP
 print "Connecting..."
@@ -52,6 +58,7 @@ dev.writeCharacteristic(cccd, b"\x01\x00")
 
 try:
   receiveThread = threading.Thread(target = waitForNotifications)
+  receiveThread.daemon = True
   receiveThread.start()
 except:
   print "Error: unable to start thread"
@@ -60,12 +67,19 @@ num = 0
 while 1:
   sys.stdout.write('>')
   userInput = raw_input()
-  print "You entered %s" % userInput
-  if userInput == "exit":
-    threadStop = 1
-    break
-
-#bidir_char.write(bytes("Hello world\n"))
-receiveThread.join()
-dev.disconnect()
-print "Disconnected!"
+  #print "You entered %s" % userInput
+  try:
+    if userInput == "exit":
+      threadStop = 1
+      dev.disconnect()
+      print "Disconnected!"
+      break
+    elif userInput == "led on":
+      bidir_char.write("#LED = ON#")
+    elif userInput == "led off":
+      bidir_char.write("#LED = OFF#")
+    else:
+      print "Command unknown!"
+  except btle.BTLEDisconnectError:
+    dev.disconnect()
+    print "Disconnected!"
