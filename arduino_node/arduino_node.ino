@@ -16,6 +16,9 @@ char inDataSerial = ' ';
 bool NL = true;
 int ble_led = 13;
 
+String msg; //message from Raspberry Pi
+bool comm = 0;  //to know that message is ongoing
+
 /*
  * Initialize the serial ports.
  * set leds to pinMode OUTPUT
@@ -74,6 +77,7 @@ void loop( )
     Serial.print("deg. C, H = ");
     Serial.print(humidity, 1);
     Serial.println("%");
+    //Send to Raspberry Pi Gateway
     BTserial.print("T = ");
     BTserial.print(temperature, 1);
     BTserial.print("C, H = ");
@@ -82,21 +86,30 @@ void loop( )
   }
 
   //BLE code
-  // Read from the Bluetooth module and send to the Arduino Serial Monitor
+  // Read from the Bluetooth module and send to the Arduino Serial Monitor, interpret received message
   if (BTserial.available()){
       inDataBT = BTserial.read();
       Serial.write(inDataBT);
 
-      /*if (inDataBT == 'F') {
-        inDataBT = ' ';
-        Serial.println("\nLED OFF");
-        digitalWrite(ble_led, LOW); // switch OFF BLE LED
+      if (inDataBT == '#'){ //beginning and end of message (protocol agreed upon by Arduino and Raspberry Pi
+        comm = (comm == 0) ? 1 : 0;
+        if (!comm) { //end of msg
+          if (msg.equals("LED = ON")){
+            Serial.println("\nLED ON");
+            digitalWrite(ble_led, HIGH); // switch ON BLE LED
+          } else if (msg.equals("LED = OFF")){
+            Serial.println("\nLED OFF");
+            digitalWrite(ble_led, LOW); // switch OFF BLE LED
+          }
+          else {
+            Serial.println("\nUnknown message received!");
+          }
+          msg = ""; //reset msg string
+        }
       }
-      if (inDataBT == 'N') {
-        inDataBT = ' ';
-        Serial.println("\nLED ON");
-        digitalWrite(ble_led, HIGH); // switch ON BLE LED
-      }*/
+      if (comm && inDataBT != '#'){ //ignore special beginning character '#'
+        msg.concat(inDataBT);
+      }
   }
   
   // Read from the Serial Monitor and send to the Bluetooth module
