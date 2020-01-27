@@ -7,28 +7,6 @@
   </head>
   <body class='container'>
     <h1><%= @title %></h1>
-    <p>Control Arduino from here:</p>
-    <form action='actuate' method='post'>
-      <ul class='unstyled'>
-        <% Choices.each do |id, text| %>
-          <li>
-            <label class='radio'>
-              <input type='radio' name='act' value='<%= id %>' id='act_<%= id %>' />
-              <%= text %>
-            </label>
-          </li>
-        <% end %>
-      </ul>
-      <button type='submit' class='btn btn-primary'>Perform action!</button>
-    </form>
-    <p>Read Arduino sensors here:</p>
-    <form action='sense' method='post'>
-    <input type="text" name="temp">
-    <input type="submit" value="Request temperature and humidity">
-    </form>
-    <form id="form">
-      <input type="text" id="input" value="send a message"></input>
-    </form>
-    <div id="msgs"></div>
+    <h2>Waiting for a gateway to connect...</h2>
   </body>
 </html>
