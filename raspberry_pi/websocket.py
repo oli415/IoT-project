@@ -1,6 +1,5 @@
 import asyncio
 import websockets
-import pi_gateway
 
 URL = 'ws://79cb755.online-server.cloud:4567'
 
@@ -18,10 +17,11 @@ class WebSocket:
     print("attempting connection to {}".format(URL))
     # perform async connect, and store the connected WebSocketClientProtocol
     # object, for later reuse for send & recv
-    self.ws = await connect(URL)
+    self.ws = await websockets.connect(URL)
     print("connected")
 
   async def wsRun(self):
+    import pi_gateway
     while True:
       response = await self.ws.recv()
       print(response)

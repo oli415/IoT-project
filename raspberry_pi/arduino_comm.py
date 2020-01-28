@@ -2,7 +2,6 @@ import bluepy.btle as btle
 import binascii
 import os
 import json
-import pi_gateway
 
 # class used for handling incoming notifications from the Arduino
 class ReceiveDelegate(btle.DefaultDelegate):
@@ -10,6 +9,7 @@ class ReceiveDelegate(btle.DefaultDelegate):
     btle.DefaultDelegate.__init__(self)
 
   def handleNotification(self, cHandle, data):
+    import pi_gateway
     #print("")
     #print("ARDUINO: " + data.decode("utf-8"))
     msg = data.decode("utf-8")
