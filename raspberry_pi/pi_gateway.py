@@ -4,6 +4,8 @@ import binascii
 import threading
 import sys
 import os
+import asyncio
+from websocket import wsStart
 
 # class used for handlng incoming notifications from the Arduino
 class ReceiveDelegate(btle.DefaultDelegate):
@@ -56,12 +58,21 @@ cccd = bidir_char.valHandle + 1
 dev.writeCharacteristic(cccd, b"\x01\x00")
 # SETUP DONE
 
+# start thread for receiving from Arduino
 try:
   receiveThread = threading.Thread(target = waitForNotifications)
-  receiveThread.daemon = True
+  receiveThread.daemon = True # the entire python program exits when only daemon threads are left
   receiveThread.start()
 except:
-  print("Error: unable to start thread")
+  print("Error: unable to start Arduino receive thread")
+
+# start thread for communicating with webserver
+try:
+  socketThread = threading.Thread(target = wsStart)
+  socketThread.daemon = True
+  socketThread.start()
+except:
+  print("Error: unable to start websocket comm thread")
 
 num = 0
 while 1:
