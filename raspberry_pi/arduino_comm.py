@@ -1,6 +1,7 @@
 import bluepy.btle as btle
 import binascii
 import os
+import json
 
 # class used for handling incoming notifications from the Arduino
 class ReceiveDelegate(btle.DefaultDelegate):
@@ -8,8 +9,19 @@ class ReceiveDelegate(btle.DefaultDelegate):
     btle.DefaultDelegate.__init__(self)
 
   def handleNotification(self, cHandle, data):
-    print("")
+    #print("")
     #print("ARDUINO: " + data.decode("utf-8"))
+    msg = data.decode("utf-8")
+    msg_list = msg.split("=")
+    #print(msg_list)
+    if msg_list[0] == "T" and msg_list[1][-1] == "H" and msg_list[2][-1] == "t" and msg_list[-1][-1] == "s":
+      msg_obj = {}
+      msg_obj['T'] = msg_list[1].split(",")[0]
+      msg_obj['H'] = msg_list[2].split(",")[0]
+      msg_obj['t'] = msg_list[3]
+      msg_json = json.dumps(msg_obj)
+      #print(msg_json)
+      #send via websocket
 
 class ArduinoComm:
   def __init__(self):
