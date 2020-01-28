@@ -65,6 +65,7 @@ void loop( )
   //sensor and LED code
   float temperature;
   float humidity;
+  unsigned long time;
 
   /* Measure temperature and humidity.  If the functions returns
      true, then a measurement is available. */
@@ -78,11 +79,14 @@ void loop( )
     Serial.print(humidity, 1);
     Serial.println("%");
     //Send to Raspberry Pi Gateway
-    BTserial.print("T = ");
-    BTserial.print(temperature, 1);
-    BTserial.print("C, H = ");
-    BTserial.print(humidity, 1);
-    BTserial.print("%");
+    BTserial.print("T=");
+    BTserial.print(temperature, 0);
+    BTserial.print("C,H=");
+    BTserial.print(humidity, 0);
+    BTserial.print("%,t=");
+    time = millis() / 1000;
+    BTserial.print(time);
+    BTserial.print("s");
   }
 
   //BLE code
