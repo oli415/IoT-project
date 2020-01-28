@@ -1,10 +1,10 @@
 import threading
 import sys
-from arduino_comm import ArduinoComm
-from websocket import wsStart
+import arduino_comm
+import websocket
 
 # start thread for receiving from Arduino
-comm1 = ArduinoComm()
+comm1 = arduino_comm.ArduinoComm()
 try:
   receiveThread = threading.Thread(target = comm1.waitForNotifications)
   receiveThread.daemon = True # the entire python program exits when only daemon threads are left
@@ -13,8 +13,9 @@ except:
   print("Error: unable to start Arduino receive thread")
 
 # start thread for communicating with webserver
+ws1 = websocket.WebSocket()
 try:
-  socketThread = threading.Thread(target = wsStart)
+  socketThread = threading.Thread(target = ws1.start)
   socketThread.daemon = True
   socketThread.start()
 except:

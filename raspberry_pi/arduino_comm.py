@@ -2,6 +2,7 @@ import bluepy.btle as btle
 import binascii
 import os
 import json
+import pi_gateway
 
 # class used for handling incoming notifications from the Arduino
 class ReceiveDelegate(btle.DefaultDelegate):
@@ -21,7 +22,7 @@ class ReceiveDelegate(btle.DefaultDelegate):
       msg_obj['t'] = msg_list[3]
       msg_json = json.dumps(msg_obj)
       #print(msg_json)
-      #send via websocket
+      pi_gateway.ws1.send(msg_json)
 
 class ArduinoComm:
   def __init__(self):
