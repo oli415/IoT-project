@@ -8,9 +8,9 @@ async def wsRun():
 
     while True:
       response = await websocket.recv()
-      #print(response)
-      if response == "LED = ON":
-        
+      print(response)
+      #if response == "LED = ON":
+      
 
 def wsStart():
   loop = asyncio.new_event_loop()
