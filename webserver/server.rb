@@ -24,7 +24,7 @@ class MyApp < Sinatra::Base
   set :environment, :production
 
   @@gateway_connected = 0 #class variable
-  @msg_content = ""
+  @msg_content = "" #instance variable
 
   get '/' do
     if !request.websocket?
@@ -42,11 +42,11 @@ class MyApp < Sinatra::Base
           settings.sockets << ws           
         end
         ws.onmessage do |msg|
-          #EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
-          # check if the message has a known format and pass it to javascript
+          #EM.next_tick { settings.sockets.each{|s| s.send(msg) } } #echo message
+          #check if the message has a known format and pass it to javascript
           if is_json?(msg) == true
             msg_json = JSON.parse(msg)
-            if (msg_json.key?("temp") && msg_json.key?("humid") && msg_json.key?("time"))
+            if (msg_json.key?("T") && msg_json.key?("H") && msg_json.key?("t"))
               @msg_content = msg_json
             end
           else
@@ -63,7 +63,11 @@ class MyApp < Sinatra::Base
   end
   
   post '/actuate' do
-    erb :index
+    @title = 'Welcome to the Sato Lab IoT Project Web Interface!'
+    @act = params['act']
+    settings.sockets.each{ |s|
+      s.send("LED = " + @act) } #send command to turn on or off LED
+    erb :connected
   end
 
   run! if app_file == $0

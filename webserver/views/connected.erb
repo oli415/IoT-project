@@ -7,7 +7,7 @@
   </head>
   <body class='container'>
     <h1><%= @title %></h1>
-    <p>Control Arduino from here:</p>
+    <h3>Control Arduino from here:</h3>
     <form action='actuate' method='post'>
       <ul class='unstyled'>
         <% Choices.each do |id, text| %>
@@ -21,22 +21,22 @@
       </ul>
       <button type='submit' class='btn btn-primary'>Perform action!</button>
     </form>
-    <p>Read Arduino sensors here:</p>
-    <input type="button" onclick="updateTemp()" value="Request temperature and humidity" />
-    <p id="resp" style="color:green; font-size:20px; font-weight: bold;">Jetz aber</p>
+    <h3>Read Arduino sensors here:</h3>
+    <input type="button" onclick="updateTemp()" class='btn btn-primary' value="Request temperature and humidity" />
+    <p id="resp" style="margin-top: 1em; color:blue; font-size:18px; font-weight: bold;"></p>
   </body>
 
   <script type="text/javascript">
     var msg_content = "<%= @msg_content %>";
     var msg_json = JSON.parse(msg_content);
-    var temp = msg_json.temp;
-    var humid = msg_json.humid;
-    var time = msg_json.time;
+    var temp = msg_json.T;
+    var humid = msg_json.H;
+    var time = msg_json.t;
     
     function updateTemp(){
-      //var displayString = "Temp = " + temp + ", H = " + humid + "%, time = " + time;
+      var displayString = "Temp = " + temp + ", H = " + humid + "%, time = " + time + "s";
       var resp_text = document.getElementById("resp");
-      var displayString = "GUTE NACHT";
+      #var displayString = "GUTE NACHT";
       resp_text.innerHTML = displayString;
     };
   </script>
