@@ -25,31 +25,31 @@ def waitForNotifications():
         return
     except btle.BTLEException as e:
       if str(e) == "Unexpected response (wr)":  # https://www.github.com/IanHarvey/bluepy/issues/253
-        print "CAUGHT!"
+        print("CAUGHT!")
         #dev.disconnect()
         #print "Disconnected!"
         os._exit(0)
     except btle.BTLEDisconnectError:
-      return  
+      return
 
 # SETUP
-print "Connecting..."
+print("Connecting...")
 dev = btle.Peripheral("F0:F8:F2:C3:6A:04")
 dev.withDelegate(ReceiveDelegate())
 
-#print "Services..."
+#print("Services...")
 #for svc in dev.services:
-#  print str(svc)
+#  print(str(svc))
 
 bidir_uuid = btle.UUID("0000ffe0-0000-1000-8000-00805f9b34fb") # the custom service
 bidir_service = dev.getServiceByUUID(bidir_uuid)
-#print "Characteristics for ffe0 service..."
+#print("Characteristics for ffe0 service...")
 #for ch in bidir_service.getCharacteristics():
-#  print str(ch)
+#  print(str(ch))
 
 bidir_char = bidir_service.getCharacteristics()[0] # the custom characteristic (ffe1)
 #val = bidir_char.read()
-#print "ffe1 characteristic value", binascii.b2a_hex(val)
+#print("ffe1 characteristic value", binascii.b2a_hex(val))
 
 # write 1 to the Client Characteristic Configuration descriptor (one handle after the custom characteristic) -> enable notifications
 cccd = bidir_char.valHandle + 1
@@ -61,25 +61,25 @@ try:
   receiveThread.daemon = True
   receiveThread.start()
 except:
-  print "Error: unable to start thread"
+  print("Error: unable to start thread")
 
 num = 0
 while 1:
   sys.stdout.write('>')
-  userInput = raw_input()
+  userInput = input()
   #print "You entered %s" % userInput
   try:
     if userInput == "exit":
       threadStop = 1
       dev.disconnect()
-      print "Disconnected!"
+      print("Disconnected!")
       break
     elif userInput == "led on":
-      bidir_char.write("#LED = ON#")
+      bidir_char.write(b"#LED = ON#")
     elif userInput == "led off":
-      bidir_char.write("#LED = OFF#")
+      bidir_char.write(b"#LED = OFF#")
     else:
-      print "Command unknown!"
+      print("Command unknown!")
   except btle.BTLEDisconnectError:
     dev.disconnect()
-    print "Disconnected!"
+    print("Disconnected!")
