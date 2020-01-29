@@ -4,7 +4,6 @@ import threading
 import sys
 import os
 import json
-#import websocket
 import comm
 
 def sendToArduino(msg):
@@ -16,6 +15,12 @@ def sendToArduino(msg):
 def arduinoDisconnect():
   dev.disconnect()
   print("Disconnected!")
+
+def waitForMessages():
+  comm.getCondition().acquire()
+  while True:
+    comm.getCondition().wait()
+    sendToArduino(comm.getNewMsg())
 
 # class used for handlng incoming notifications from the Arduino
 class ReceiveDelegate(btle.DefaultDelegate):
@@ -84,12 +89,21 @@ cccd = bidir_char.valHandle + 1
 dev.writeCharacteristic(cccd, b"\x01\x00")
 # SETUP DONE
 
+#start receive thread
 try:
   receiveThread = threading.Thread(target = waitForNotifications)
   receiveThread.daemon = True
   receiveThread.start()
 except:
-  print("Error: unable to start thread")
+  print("Error: unable to start receive thread")
+
+#start send thread
+try:
+  sendThread = threading.Thread(target = waitForMessages)
+  sendThread.daemon = True
+  sendThread.start()
+except:
+  print("Error: unable to start send thread")
 
 # start program (user input) loop
 while 1:
