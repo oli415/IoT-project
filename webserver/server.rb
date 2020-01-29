@@ -7,6 +7,7 @@ Choices = {
   'OFF' => 'Turn LED OFF',
 }
 
+#to check if the received message is in json format
 def is_json?(json)
   begin
     JSON.parse(json)
@@ -24,7 +25,7 @@ class MyApp < Sinatra::Base
   set :environment, :production
 
   @@gateway_connected = 0 #class variable
-  @msg_content = "" #instance variable
+  @@msg_content = ""
 
   get '/' do
     if !request.websocket?
@@ -47,7 +48,7 @@ class MyApp < Sinatra::Base
           if is_json?(msg) == true
             msg_json = JSON.parse(msg)
             if (msg_json.key?("T") && msg_json.key?("H") && msg_json.key?("t"))
-              @msg_content = msg_json
+              @@msg_content = msg_json
             end
           else
             puts "No valid JSON"
@@ -69,6 +70,17 @@ class MyApp < Sinatra::Base
       s.send("LED = " + @act) } #send command to turn on or off LED
     erb :connected
   end
+
+  post '/display' do
+    @title = 'Welcome to the Sato Lab IoT Project Web Interface!'
+    if @@msg_content == ""
+      @data = "No data available"
+    else
+      @data = "T = " + @@msg_content["T"] + ", H = " + @@msg_content["H"] + ", t = " + @@msg_content["t"]
+    end
+    erb :connected
+  end
+
 
   run! if app_file == $0
 end
