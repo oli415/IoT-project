@@ -27,17 +27,19 @@
   </body>
 
   <script type="text/javascript">
-    var msg_content = "<%= @msg_content %>";
-    var msg_json = JSON.parse(msg_content);
-    var temp = msg_json.T;
-    var humid = msg_json.H;
-    var time = msg_json.t;
-    
     function updateTemp(){
-      var displayString = "Temp = " + temp + ", H = " + humid + "%, time = " + time + "s";
+      var msg_content = "<%= @msg_content %>";
+      var displayString = ""
+      if (msg_content.localeCompare(displayString) != 0){ //0 if both strings are equal, != 0 means there is sensor data available
+        var msg_json = JSON.parse(msg_content);
+        var temp = msg_json.T;
+        var humid = msg_json.H;
+        var time = msg_json.t;
+        displayString = "Temp = " + temp + ", H = " + humid + "%, time = " + time + "s";
+      }
       var resp_text = document.getElementById("resp");
-      #var displayString = "GUTE NACHT";
-      resp_text.innerHTML = displayString;
+      //var displayString = "GUTE NACHT";
+      resp_text.innerHTML = displayString;      
     };
   </script>
 </html>

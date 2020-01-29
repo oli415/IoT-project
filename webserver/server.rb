@@ -7,6 +7,7 @@ Choices = {
   'OFF' => 'Turn LED OFF',
 }
 
+#to check if the received message is in json format
 def is_json?(json)
   begin
     JSON.parse(json)
@@ -47,7 +48,7 @@ class MyApp < Sinatra::Base
           if is_json?(msg) == true
             msg_json = JSON.parse(msg)
             if (msg_json.key?("T") && msg_json.key?("H") && msg_json.key?("t"))
-              @msg_content = msg_json
+              @msg_content = msg
             end
           else
             puts "No valid JSON"
