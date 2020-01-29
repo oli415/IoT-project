@@ -35,7 +35,7 @@ class ReceiveDelegate(btle.DefaultDelegate):
       msg_obj['t'] = msg_list[3]
       msg_json = json.dumps(msg_obj)
       print(msg_json)
-      #comm.wsSend(msg_json)
+      comm.wsSend(msg_json)
 
 # Thread function
 def waitForNotifications():

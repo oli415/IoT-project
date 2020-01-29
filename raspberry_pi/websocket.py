@@ -40,5 +40,11 @@ class WebSocket:
     self.loop.run_until_complete(self.wsRun())
 
   def send(self, msg):
-    self.loop.run_until_complete(self.wsSend(msg))
-
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(self.wsSend(msg))
+    #asyncio.ensure_future(self.wsSend(msg))
+    #self.loop.run_until_complete(self.wsSend(msg))
+    #self.loop.run(self.wsSend(msg))
+    #task_obj = self.loop.create_task(self.wsSend(msg))
+    #self.loop.run_until_complete(task_obj)
