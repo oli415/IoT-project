@@ -22,24 +22,9 @@
       <button type='submit' class='btn btn-primary'>Perform action!</button>
     </form>
     <h3>Read Arduino sensors here:</h3>
-    <input type="button" onclick="updateTemp()" class='btn btn-primary' value="Request temperature and humidity" />
-    <p id="resp" style="margin-top: 1em; color:blue; font-size:18px; font-weight: bold;"></p>
+    <form action='display' method='post'>
+      <button type='submit' class='btn btn-primary'>Display temperature and humidity</button>
+      <p style="margin-top: 1em; color:blue; font-size:18px; font-weight: bold;"><%= @data %></p>
+    </form>
   </body>
-
-  <script type="text/javascript">
-    function updateTemp(){
-      var msg_content = "<%= @msg_content %>";
-      var displayString = ""
-      if (msg_content.localeCompare(displayString) != 0){ //0 if both strings are equal, != 0 means there is sensor data available
-        var msg_json = JSON.parse(msg_content);
-        var temp = msg_json.T;
-        var humid = msg_json.H;
-        var time = msg_json.t;
-        displayString = "Temp = " + temp + ", H = " + humid + "%, time = " + time + "s";
-      }
-      var resp_text = document.getElementById("resp");
-      //displayString = "Test";
-      resp_text.innerHTML = displayString;      
-    };
-  </script>
 </html>
