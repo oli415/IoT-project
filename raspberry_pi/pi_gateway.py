@@ -3,8 +3,19 @@ import binascii
 import threading
 import sys
 import os
-import websocket
 import json
+#import websocket
+import comm
+
+def sendToArduino(msg):
+  try:
+    bidir_char.write(msg)
+  except btle.BTLEDisconnectError:
+    arduinoDisconnect()
+
+def arduinoDisconnect():
+  dev.disconnect()
+  print("Disconnected!")
 
 # class used for handlng incoming notifications from the Arduino
 class ReceiveDelegate(btle.DefaultDelegate):
@@ -24,7 +35,7 @@ class ReceiveDelegate(btle.DefaultDelegate):
       msg_obj['t'] = msg_list[3]
       msg_json = json.dumps(msg_obj)
       print(msg_json)
-      #pi_gateway.ws1.send(msg_json)
+      #comm.wsSend(msg_json)
 
 # Thread function
 def waitForNotifications():
@@ -42,14 +53,12 @@ def waitForNotifications():
       return
 
 # start thread for communicating with webserver
-#ws1 = websocket.WebSocket()
-#try:
- # socketThread = threading.Thread(target = ws1.start)
-  #socketThread.daemon = True
-  #socketThread.start()
-#except:
- # print("Error: unable to start websocket comm thread")
-
+try:
+  socketThread = threading.Thread(target = comm.wsStart)
+  socketThread.daemon = True
+  socketThread.start()
+except:
+  print("Error: unable to start websocket comm thread")
 
 # SETUP
 print("Connecting...")
