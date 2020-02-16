@@ -8,6 +8,7 @@ This project showcases an Edge Computing application. The basic components are:
 
 The idea is to enable a user to view the current sensor readings form anywhere in the world and to activate the actuator(s) with a low latency.
 See this video for a demonstration:  
+
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/Lw-rmpPToWY/0.jpg)](https://www.youtube.com/watch?v=Lw-rmpPToWY)
 
 ## Instructions
