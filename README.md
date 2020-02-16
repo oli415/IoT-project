@@ -1,5 +1,5 @@
 # IoT-project
-Created during my time at Sato Lab (http://www-sato.cc.u-tokyo.ac.jp/at) at The University of Tokyo.
+Created during my time at Sato Lab (http://www-sato.cc.u-tokyo.ac.jp) at The University of Tokyo.
 
 This project showcases an Edge Computing application. The basic components are:
 * Arduino Uno acting as edge device; equipped with sensors, actuators and a Bluetooth Low Energy module
