@@ -12,7 +12,7 @@ See this video for a demonstration:
 
 ## Arduino
 ### Hardware setup
-![alt text](https://github.com/oli415/IoT-project/blob/master/Arduino_Hardware.jpg "Arduino Hardware")
+<img src="https://github.com/oli415/IoT-project/blob/master/Arduino_Hardware.jpg" width="48">
 This is the BLE module: [DSD TECH HM-17](https://www.amazon.co.jp/dp/B07GNZFDH2/).
 To connect it to the Arduino, I used the GPIO pins 8 and 9 for receive (RX) and transmit (TX) respectively. The HM-17 is a 3.3V device, so the 5V from the Arduino should be brought down, as explained in [this guide](http://www.martyncurrey.com/hm-10-bluetooth-4ble-modules/) for the HM-10 (similar module). I used a voltage divider for the connection from the Arduino TX to the HM-10 RX pin (the other way around is fine because the Arduino will see the 3.3V from the HM-10 TX as high).
 
