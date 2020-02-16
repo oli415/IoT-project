@@ -10,6 +10,10 @@ The idea is to enable a user to view the current sensor readings form anywhere i
 See this video for a demonstration:  
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/Lw-rmpPToWY/0.jpg)](https://www.youtube.com/watch?v=Lw-rmpPToWY)
 
+## Instructions
+
+To use this example, first set up the hardware as explained and flash your Arduino with the arduino_node.ino code. Next, start the webserver ("ruby server.rb"). Make sure to supply the correct URL in the raspberry_pi/websocket.py file (line 5) and then start the gateway ("python3 pi_gateway.py"). The gateway will connect to the HM-17 of the Arduino and the Webserver automatically. Access the website of your webserver and you should see the control interface. Make sure the Arduino and Raspberry Pi are in range for the bluetooth connection to work.
+
 ## Arduino
 ### Hardware setup
 <img src="https://github.com/oli415/IoT-project/blob/master/Arduino_Hardware.jpg" width="500">
